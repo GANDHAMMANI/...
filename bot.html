@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALIEN - Virtual Assistant</title>
+    <link rel="shortcut icon" href="avatar.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400;500;600;700&display=swap");
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Roboto Mono", monospace;
+        }
+        
+        .main {
+            min-height: 100vh;
+            position: relative;
+            width: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .main .image-container {
+            padding: 10px;
+        }
+        
+        .main .image-container .image {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .main .image-container .image img {
+            width: 350px;
+            align-items: center;
+        }
+        
+        .main .image-container h1 {
+            color: #00bcd4;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 40px;
+        }
+        
+        .main .image-container p {
+            color: #324042;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .main .input {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40vw;
+            height: 50px;
+            border-radius: 20px;
+            background: rgb(202 253 255 / 50%);
+        }
+        
+        .main .input .talk {
+            background: transparent;
+            outline: none;
+            border: none;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        
+        .main .input .talk i {
+            font-size: 20px;
+            color: #aed0d0;
+        }
+        
+        .main .input .content {
+            color: #aed0d0;
+            font-size: 15px;
+            margin-right: 20px;
+        }
+
+
+        .results {
+    margin-top: 20px;
+    color: #aed0d0;
+}
+
+.result-item {
+    background: rgba(202, 253, 255, 0.1);
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 10px;
+}
+
+.result-item h3 a {
+    color: #00bcd4;
+    text-decoration: none;
+}
+
+.result-item p {
+    margin: 5px 0 0;
+}
+
+
+    </style>
+</head>
+<body>
+    <section class="main">
+        <div class="image-container">
+            <div class="image">
+                <img src="XDZT.gif" alt="image">
+            </div>
+            <h1>A L I E N </h1>
+            <p>I am a Virtual Assistant ALIEN, How may I help you?</p>
+        </div>
+        <div class="input">
+            <button class="talk"><i class="fas fa-microphone-alt"></i></button>
+            <h1 class="content"> Click here to speak</h1>
+        </div>
+        <div class="results" id="results"></div>
+    </section>
+    <script>
+        const btn = document.querySelector('.talk');
+        const content = document.querySelector('.content');
+        const resultsDiv = document.getElementById('results');
+    
+        const API_KEY = 'AIzaSyBkSmH7XzLcxi0HwGiYRoa6YW7poOfa5Fc';
+        const CX = '95422de319fca48a0';
+    
+        function speak(text) {
+            const text_speak = new SpeechSynthesisUtterance(text);
+    
+            text_speak.rate = 1;
+            text_speak.volume = 1;
+            text_speak.pitch = 1;
+    
+            window.speechSynthesis.speak(text_speak);
+        }
+    
+        function wishMe() {
+            var day = new Date();
+            var hour = day.getHours();
+    
+            if (hour >= 0 && hour < 12) {
+                speak("Good Morning Boss...");
+            } else if (hour >= 12 && hour < 17) {
+                speak("Good Afternoon Master...");
+            } else {
+                speak("Good Evening Sir...");
+            }
+        }
+    
+        window.addEventListener('load', () => {
+            speak("Initializing ALIEN...");
+            wishMe();
+        });
+    
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+    
+        recognition.onresult = (event) => {
+            const currentIndex = event.resultIndex;
+            const transcript = event.results[currentIndex][0].transcript;
+            content.textContent = transcript;
+            takeCommand(transcript.toLowerCase());
+        };
+    
+        btn.addEventListener('click', () => {
+            content.textContent = "Listening...";
+            recognition.start();
+        });
+    
+        async function searchGoogle(query) {
+            const response = await fetch(`https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${CX}&q=${query}`);
+            const data = await response.json();
+            return data.items;
+        }
+    
+        async function takeCommand(message) {
+            if (message.includes('hey') || message.includes('hello')) {
+                speak("Hello Sir, How May I Help You?");
+            } else if (message.includes("open google")) {
+                speak("Opening Google...");
+                window.open("https://google.com", "_blank");
+            } else if (message.includes("open youtube")) {
+                speak("Opening Youtube...");
+                window.open("https://youtube.com", "_blank");
+            } else if (message.includes("open facebook")) {
+                speak("Opening Facebook...");
+                window.open("https://facebook.com", "_blank");
+            } else if (message.includes('what is') || message.includes('who is') || message.includes('what are')) {
+                speak("This is what I found on the internet regarding " + message);
+                const results = await searchGoogle(message);
+                displayResults(results);
+            } else if (message.includes('wikipedia')) {
+                speak("This is what I found on Wikipedia regarding " + message);
+                window.open(`https://en.wikipedia.org/wiki/${message.replace("wikipedia", "").trim()}`, "_blank");
+            } else if (message.includes('time')) {
+                const time = new Date().toLocaleString(undefined, { hour: "numeric", minute: "numeric" });
+                speak("The current time is " + time);
+            } else if (message.includes('date')) {
+                const date = new Date().toLocaleString(undefined, { month: "short", day: "numeric" });
+                speak("Today's date is " + date);
+            } else if (message.includes('calculator')) {
+                speak("Opening Calculator");
+                window.open('Calculator:///');
+            } else {
+                speak("I found some information for " + message + " on Google");
+                const results = await searchGoogle(message);
+                displayResults(results);
+            }
+        }
+    
+        function displayResults(results) {
+    resultsDiv.innerHTML = '';
+    const utteranceQueue = []; // Queue for speech synthesis
+
+    results.forEach((result, index) => {
+        const resultItem = document.createElement('div');
+        resultItem.classList.add('result-item');
+        resultItem.innerHTML = `
+            <h3><a href="${result.link}" target="_blank">${result.title}</a></h3>
+            <p>${result.snippet}</p>
+        `;
+        resultsDiv.appendChild(resultItem);
+
+        // Add each search result to the utterance queue
+        const textToSpeak = `Result ${index + 1}: ${result.title}. ${result.snippet}`;
+        utteranceQueue.push(new SpeechSynthesisUtterance(textToSpeak));
+    });
+
+    // Speak each result sequentially
+    speakResultsSequentially(utteranceQueue);
+}
+
+function speakResultsSequentially(utteranceQueue) {
+    if (utteranceQueue.length === 0) return;
+
+    const utterance = utteranceQueue.shift();
+    utterance.onend = () => {
+        speakResultsSequentially(utteranceQueue);
+    };
+
+    // Speak the current utterance
+    window.speechSynthesis.speak(utterance);
+}
+
+    </script>
+    
+</body>
+</html>
+    
