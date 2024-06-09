@@ -15,54 +15,55 @@
             font-family: "Roboto Mono", monospace;
         }
 
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+        }
+
         .main {
             min-height: 100vh;
             position: relative;
             width: 100%;
-            background: #000;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
         .main .image-container {
             padding: 10px;
+            text-align: center;
         }
 
-        .main .image-container .image {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .main .image-container .image img {
-            width: 350px;
-            align-items: center;
+        .main .image-container img {
+            max-width: 100%;
+            height: auto;
         }
 
         .main .image-container h1 {
             color: #00bcd4;
-            text-align: center;
+            font-size: 2rem;
             margin-bottom: 10px;
-            font-size: 40px;
         }
 
         .main .image-container p {
             color: #324042;
-            text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
 
         .main .input {
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 40vw;
+            width: 80vw;
+            max-width: 300px;
             height: 50px;
-            border-radius: 20px;
+            border-radius: 25px;
             background: rgb(202 253 255 / 50%);
+            margin-bottom: 20px;
+            position: relative;
         }
 
         .main .input .talk {
@@ -76,6 +77,9 @@
             align-items: center;
             font-size: 15px;
             cursor: pointer;
+            position: absolute;
+            left: 0;
+            transition: background 0.3s ease;
         }
 
         .main .input .talk i {
@@ -83,10 +87,15 @@
             color: #aed0d0;
         }
 
+        .main .input:hover .talk {
+            background: #4CAF50;
+            color: #fff;
+        }
+
         .main .input .content {
             color: #aed0d0;
             font-size: 15px;
-            margin-right: 20px;
+            margin-left: 50px;
         }
 
         .results {
@@ -95,6 +104,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100%;
         }
 
         .result-item {
@@ -102,7 +112,9 @@
             padding: 10px;
             margin: 10px 0;
             border-radius: 10px;
-            width: 80%;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
         }
 
         .result-item h3 a {
@@ -128,9 +140,7 @@
 <body>
     <section class="main">
         <div class="image-container">
-            <div class="image">
-                <img src="XDZT.gif" alt="image">
-            </div>
+            <img src="XDZT.gif" alt="image">
             <h1>A L I E N</h1>
             <p>I am a Virtual Assistant ALIEN, How may I help you?</p>
         </div>
