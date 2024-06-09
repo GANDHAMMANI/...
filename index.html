@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +14,7 @@
             box-sizing: border-box;
             font-family: "Roboto Mono", monospace;
         }
-        
+
         .main {
             min-height: 100vh;
             position: relative;
@@ -26,36 +25,36 @@
             align-items: center;
             justify-content: center;
         }
-        
+
         .main .image-container {
             padding: 10px;
         }
-        
+
         .main .image-container .image {
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        
+
         .main .image-container .image img {
             width: 350px;
             align-items: center;
         }
-        
+
         .main .image-container h1 {
             color: #00bcd4;
             text-align: center;
             margin-bottom: 10px;
             font-size: 40px;
         }
-        
+
         .main .image-container p {
             color: #324042;
             text-align: center;
             margin-bottom: 40px;
         }
-        
+
         .main .input {
             display: flex;
             justify-content: center;
@@ -65,7 +64,7 @@
             border-radius: 20px;
             background: rgb(202 253 255 / 50%);
         }
-        
+
         .main .input .talk {
             background: transparent;
             outline: none;
@@ -78,42 +77,53 @@
             font-size: 15px;
             cursor: pointer;
         }
-        
+
         .main .input .talk i {
             font-size: 20px;
             color: #aed0d0;
         }
-        
+
         .main .input .content {
             color: #aed0d0;
             font-size: 15px;
             margin-right: 20px;
         }
 
-
         .results {
-    margin-top: 20px;
-    color: #aed0d0;
-}
+            margin-top: 20px;
+            color: #aed0d0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-.result-item {
-    background: rgba(202, 253, 255, 0.1);
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 10px;
-}
+        .result-item {
+            background: rgba(202, 253, 255, 0.1);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 10px;
+            width: 80%;
+        }
 
-.result-item h3 a {
-    color: #00bcd4;
-    text-decoration: none;
-}
+        .result-item h3 a {
+            color: #00bcd4;
+            text-decoration: none;
+        }
 
-.result-item p {
-    margin: 5px 0 0;
-}
+        .result-item p {
+            margin: 5px 0 0;
+        }
 
+        .result-item img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
 
+        #player {
+            margin-top: 20px;
+        }
     </style>
+    <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
     <section class="main">
@@ -121,37 +131,57 @@
             <div class="image">
                 <img src="XDZT.gif" alt="image">
             </div>
-            <h1>A L I E N </h1>
+            <h1>A L I E N</h1>
             <p>I am a Virtual Assistant ALIEN, How may I help you?</p>
         </div>
         <div class="input">
             <button class="talk"><i class="fas fa-microphone-alt"></i></button>
-            <h1 class="content"> Click here to speak</h1>
+            <h1 class="content">Click here to speak</h1>
         </div>
         <div class="results" id="results"></div>
+        <div id="player"></div>
     </section>
     <script>
         const btn = document.querySelector('.talk');
         const content = document.querySelector('.content');
         const resultsDiv = document.getElementById('results');
-    
-        const API_KEY = 'AIzaSyBkSmH7XzLcxi0HwGiYRoa6YW7poOfa5Fc';
+        const playerDiv = document.getElementById('player');
+
+        const GOOGLE_API_KEY = 'AIzaSyBkSmH7XzLcxi0HwGiYRoa6YW7poOfa5Fc';
         const CX = '95422de319fca48a0';
-    
+        const YOUTUBE_API_KEY = 'AIzaSyCm93xewGj8DQLFEmOgZTTy4jBO55MxNNs';
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+
+        let stopSpeaking = false;
+        let player;
+
+        recognition.onresult = (event) => {
+            const currentIndex = event.resultIndex;
+            const transcript = event.results[currentIndex][0].transcript;
+            content.textContent = transcript;
+            takeCommand(transcript.toLowerCase());
+        };
+
+        btn.addEventListener('click', () => {
+            stopMediaAndSpeech();
+            content.textContent = "Listening...";
+            recognition.start();
+        });
+
         function speak(text) {
             const text_speak = new SpeechSynthesisUtterance(text);
-    
             text_speak.rate = 1;
             text_speak.volume = 1;
             text_speak.pitch = 1;
-    
             window.speechSynthesis.speak(text_speak);
         }
-    
+
         function wishMe() {
-            var day = new Date();
-            var hour = day.getHours();
-    
+            const day = new Date();
+            const hour = day.getHours();
+
             if (hour >= 0 && hour < 12) {
                 speak("Good Morning Boss...");
             } else if (hour >= 12 && hour < 17) {
@@ -160,33 +190,34 @@
                 speak("Good Evening Sir...");
             }
         }
-    
+
         window.addEventListener('load', () => {
             speak("Initializing ALIEN...");
             wishMe();
         });
-    
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const recognition = new SpeechRecognition();
-    
-        recognition.onresult = (event) => {
-            const currentIndex = event.resultIndex;
-            const transcript = event.results[currentIndex][0].transcript;
-            content.textContent = transcript;
-            takeCommand(transcript.toLowerCase());
-        };
-    
-        btn.addEventListener('click', () => {
-            content.textContent = "Listening...";
-            recognition.start();
-        });
-    
+
         async function searchGoogle(query) {
-            const response = await fetch(`https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${CX}&q=${query}`);
-            const data = await response.json();
-            return data.items;
+            try {
+                const response = await fetch(`https://www.googleapis.com/customsearch/v1?key=${GOOGLE_API_KEY}&cx=${CX}&q=${encodeURIComponent(query)}&searchType=image`);
+                const data = await response.json();
+                return data.items;
+            } catch (error) {
+                speak("Sorry, I couldn't fetch the results.");
+                console.error(error);
+            }
         }
-    
+
+        async function searchYouTube(query) {
+            try {
+                const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${encodeURIComponent(query)}&key=${YOUTUBE_API_KEY}`);
+                const data = await response.json();
+                return data.items;
+            } catch (error) {
+                speak("Sorry, I couldn't fetch the results.");
+                console.error(error);
+            }
+        }
+
         async function takeCommand(message) {
             if (message.includes('hey') || message.includes('hello')) {
                 speak("Hello Sir, How May I Help You?");
@@ -201,8 +232,9 @@
                 window.open("https://facebook.com", "_blank");
             } else if (message.includes('what is') || message.includes('who is') || message.includes('what are')) {
                 speak("This is what I found on the internet regarding " + message);
-                const results = await searchGoogle(message);
-                displayResults(results);
+                const googleResults = await searchGoogle(message);
+                const youtubeResults = await searchYouTube(message);
+                displayResults(googleResults, youtubeResults);
             } else if (message.includes('wikipedia')) {
                 speak("This is what I found on Wikipedia regarding " + message);
                 window.open(`https://en.wikipedia.org/wiki/${message.replace("wikipedia", "").trim()}`, "_blank");
@@ -215,49 +247,147 @@
             } else if (message.includes('calculator')) {
                 speak("Opening Calculator");
                 window.open('Calculator:///');
+            } else if (message.includes('stop')) {
+                stopMediaAndSpeech();
+                speak("Is there something else I should help you with?");
+            } else if (message.includes('play')) {
+                const song = message.replace("play", "").trim();
+                speak("Playing " + song);
+                playSongOnYouTube(song);
             } else {
                 speak("I found some information for " + message + " on Google");
                 const results = await searchGoogle(message);
                 displayResults(results);
             }
         }
-    
-        function displayResults(results) {
-    resultsDiv.innerHTML = '';
-    const utteranceQueue = []; // Queue for speech synthesis
 
-    results.forEach((result, index) => {
-        const resultItem = document.createElement('div');
-        resultItem.classList.add('result-item');
-        resultItem.innerHTML = `
-            <h3><a href="${result.link}" target="_blank">${result.title}</a></h3>
-            <p>${result.snippet}</p>
-        `;
-        resultsDiv.appendChild(resultItem);
+        function stopMediaAndSpeech() {
+            stopSpeaking = true;
+            window.speechSynthesis.cancel();
+            if (player && typeof player.stopVideo === 'function') {
+                player.stopVideo();
+                player.destroy();
+                player = null;
+            }
+        }
 
-        // Add each search result to the utterance queue
-        const textToSpeak = `Result ${index + 1}: ${result.title}. ${result.snippet}`;
-        utteranceQueue.push(new SpeechSynthesisUtterance(textToSpeak));
-    });
+        async function playSongOnYouTube(song) {
+    const results = await searchYouTube(song);
+    let videoFound = false;
 
-    // Speak each result sequentially
-    speakResultsSequentially(utteranceQueue);
+    for (const result of results) {
+        const videoId = result.id.videoId;
+        if (videoId) {
+            // Check if the video is embeddable
+            const isEmbeddable = await checkEmbeddable(videoId);
+            if (isEmbeddable) {
+                if (player) {
+                    player.destroy();
+                }
+                player = new YT.Player('player', {
+                    height: '360',
+                    width: '640',
+                    videoId: videoId,
+                    events: {
+                        'onReady': onPlayerReady,
+                        'onError': onPlayerError
+                    }
+                });
+                videoFound = true;
+                break;
+            } else {
+                // If not embeddable, provide a direct link
+                const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+                playerDiv.innerHTML = `<a href="${videoUrl}" target="_blank">Watch on YouTube</a>`;
+                speak("Sorry, the video is not available for embedding. You can watch it on YouTube.");
+                videoFound = true;
+                break;
+            }
+        }
+    }
+
+    if (!videoFound) {
+        speak("Sorry, I couldn't find a playable video. Please try another one.");
+    }
 }
 
-function speakResultsSequentially(utteranceQueue) {
-    if (utteranceQueue.length === 0) return;
-
-    const utterance = utteranceQueue.shift();
-    utterance.onend = () => {
-        speakResultsSequentially(utteranceQueue);
-    };
-
-    // Speak the current utterance
-    window.speechSynthesis.speak(utterance);
+async function checkEmbeddable(videoId) {
+    try {
+        const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=status&id=${videoId}&key=${YOUTUBE_API_KEY}`);
+        const data = await response.json();
+        if (data.items.length > 0) {
+            return data.items[0].status.embeddable;
+        }
+    } catch (error) {
+        console.error("Error checking embeddable status:", error);
+    }
+    return false;
 }
 
+function onPlayerReady(event) {
+    event.target.playVideo();
+}
+
+function onPlayerError(event) {
+    if (event.data === YT.PlayerError.EMBEDDING_NOT_ALLOWED || event.data === YT.PlayerError.HTML5_ERROR) {
+        const videoUrl = `https://www.youtube.com/watch?v=${event.target.getVideoData().video_id}`;
+        speak("Sorry, the video is not available for embedding. You can watch it on YouTube.");
+        playerDiv.innerHTML = `<a href="${videoUrl}" target="_blank">Watch on YouTube</a>`;
+    } else {
+        speak("Sorry, there was an error playing the video. Please try another one.");
+    }
+}
+
+        function displayResults(googleResults, youtubeResults) {
+            resultsDiv.innerHTML = '';
+            const utteranceQueue = [];
+
+            googleResults.forEach((result, index) => {
+                const resultItem = document.createElement('div');
+                resultItem.classList.add('result-item');
+                resultItem.innerHTML = `
+                    <h3><a href="${result.link}" target="_blank">${result.title}</a></h3>
+                    <img src="${result.link}" alt="${result.title}">
+                `;
+                resultsDiv.appendChild(resultItem);
+
+                const textToSpeak = ` result ${index + 1}: ${result.title}`;
+                utteranceQueue.push(new SpeechSynthesisUtterance(textToSpeak));
+            });
+
+            youtubeResults.forEach((result, index) => {
+                const resultItem = document.createElement('div');
+                resultItem.classList.add('result-item');
+                resultItem.innerHTML = `
+                    <h3><a href="https://www.youtube.com/watch?v=${result.id.videoId}" target="_blank">${result.snippet.title}</a></h3>
+                    <p>${result.snippet.description}</p>
+                    <img src="${result.snippet.thumbnails.medium.url}" alt="${result.snippet.title}">
+                `;
+                resultsDiv.appendChild(resultItem);
+
+                const textToSpeak = `Video result ${index + 1}: ${result.snippet.title}. ${result.snippet.description}`;
+                utteranceQueue.push(new SpeechSynthesisUtterance(textToSpeak));
+            });
+
+            stopSpeaking = false;
+            speakResultsSequentially(utteranceQueue);
+        }
+
+        function speakResultsSequentially(utteranceQueue) {
+            if (stopSpeaking || utteranceQueue.length === 0) {
+                if (stopSpeaking) {
+                    speak("Is there something else I should help you with?");
+                }
+                return;
+            }
+
+            const utterance = utteranceQueue.shift();
+            utterance.onend = () => {
+                speakResultsSequentially(utteranceQueue);
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
     </script>
-    
 </body>
 </html>
-    
