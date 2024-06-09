@@ -66,31 +66,42 @@
             position: relative;
         }
 
-        .main .input .talk {
-            background: transparent;
-            outline: none;
-            border: none;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 15px;
-            cursor: pointer;
-            position: absolute;
-            left: 0;
-            transition: background 0.3s ease;
-        }
+       .main .input .talk {
+    background: transparent;
+    outline: none;
+    border: none;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    cursor: pointer;
+    position: absolute;
+    left: 0;
+    transition: all 0.3s ease; /* Added transition for smoother animation */
+}
 
-        .main .input .talk i {
-            font-size: 20px;
-            color: #aed0d0;
-        }
+.main .input .talk:hover {
+    transform: scale(1.1); /* Zoom effect on hover */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow effect on hover */
+}
 
-        .main .input:hover .talk {
-            background: #4CAF50;
-            color: #fff;
-        }
+.main .input:hover .talk {
+    background: #4CAF50;
+    color: #fff;
+    border-radius: 50%; /* Change border-radius to make it round on hover */
+    animation: pulse 1s infinite alternate; /* Added pulse animation */
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.1);
+    }
+}
 
         .main .input .content {
             color: #aed0d0;
