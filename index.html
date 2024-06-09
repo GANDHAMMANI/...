@@ -94,14 +94,19 @@
     animation: pulse 1s infinite alternate; /* Added pulse animation */
 }
 
-@keyframes pulse {
+@keyframes moveRight {
     0% {
-        transform: scale(1);
+        left: 0;
     }
     100% {
-        transform: scale(1.1);
+        left: calc(100% - 50px); /* Adjust to match the width of your container */
     }
 }
+
+.main .input .talk.move {
+    animation: moveRight 1s forwards; /* Run animation when the "move" class is added */
+}
+
 
         .main .input .content {
             color: #aed0d0;
@@ -162,6 +167,38 @@
         <div class="results" id="results"></div>
         <div id="player"></div>
     </section>
+
+    <script>
+
+        const input = document.querySelector('.input');
+
+let startX = 0;
+let isDragging = false;
+
+input.addEventListener('mousedown', (event) => {
+    startX = event.clientX;
+    isDragging = true;
+});
+
+document.addEventListener('mousemove', (event) => {
+    if (isDragging) {
+        const moveX = event.clientX - startX;
+        const newPosition = Math.min(Math.max(0, moveX), input.clientWidth - 50); // Ensure the button stays within the container
+        input.querySelector('.talk').style.left = newPosition + 'px';
+    }
+});
+
+document.addEventListener('mouseup', () => {
+    if (isDragging) {
+        const moveX = event.clientX - startX;
+        if (moveX > 50) { // If moved more than 50 pixels, trigger animation
+            input.querySelector('.talk').classList.add('move');
+        }
+        isDragging = false;
+    }
+});
+
+    </script>
     <script>
         const btn = document.querySelector('.talk');
         const content = document.querySelector('.content');
