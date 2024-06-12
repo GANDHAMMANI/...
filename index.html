@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALIEN - Virtual Assistant</title>
+    <title>LEO 2.0  - Virtual Assistant</title>
     <link rel="shortcut icon" href="avatar.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
@@ -68,46 +68,45 @@
         }
 
         .main .input .talk {
-    background: transparent;
-    outline: none;
-    border: none;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 15px;
-    cursor: pointer;
-    position: absolute;
-    left: 0;
-    transition: all 0.3s ease; /* Added transition for smoother animation */
-}
+            background: transparent;
+            outline: none;
+            border: none;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 15px;
+            cursor: pointer;
+            position: absolute;
+            left: 0;
+            transition: all 0.3s ease; /* Added transition for smoother animation */
+        }
 
-.main .input .talk:hover {
-    transform: scale(1.1); /* Zoom effect on hover */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow effect on hover */
-}
+        .main .input .talk:hover {
+            transform: scale(1.1); /* Zoom effect on hover */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow effect on hover */
+        }
 
-.main .input:hover .talk {
-    background: #4CAF50;
-    color: #fff;
-    border-radius: 50%; /* Change border-radius to make it round on hover */
-    animation: pulse 1s infinite alternate; /* Added pulse animation */
-}
+        .main .input:hover .talk {
+            background: #4CAF50;
+            color: #fff;
+            border-radius: 50%; /* Change border-radius to make it round on hover */
+            animation: pulse 1s infinite alternate; /* Added pulse animation */
+        }
 
-@keyframes moveRight {
-    0% {
-        left: 0;
-    }
-    100% {
-        left: calc(100% - 50px); /* Adjust to match the width of your container */
-    }
-}
+        @keyframes moveRight {
+            0% {
+                left: 0;
+            }
+            100% {
+                left: calc(100% - 50px); /* Adjust to match the width of your container */
+            }
+        }
 
-.main .input .talk.move {
-    animation: moveRight 1s forwards; /* Run animation when the "move" class is added */
-}
-
+        .main .input .talk.move {
+            animation: moveRight 1s forwards; /* Run animation when the "move" class is added */
+        }
 
         .main .input .content {
             color: #aed0d0;
@@ -181,7 +180,13 @@
             margin-top: 10px;
             font-size: 18px;
         }
-        
+
+        #recorded-video {
+            display: none;
+            margin-top: 20px;
+            max-width: 100%;
+            border: 2px solid #00bcd4;
+        }
     </style>
     <script src="https://www.youtube.com/iframe_api"></script>
 </head>
@@ -197,7 +202,7 @@
         </div>
         <div class="input">
             <button class="talk"><i class="fas fa-microphone-alt"></i></button>
-            <h1 class="content">Press mic to speak</h1>
+            <h1 class="content">Click here to speak</h1>
         </div>
         <div class="user-message" id="user-message"></div>
         <div class="results" id="results"></div>
@@ -207,6 +212,7 @@
             <canvas id="selfie-canvas" width="320" height="240" style="display: none;"></canvas>
             <img id="selfie-image" alt="Selfie">
             <div id="countdown"></div>
+            <video id="recorded-video" controls></video>
         </div>
     </section>
     <script>
@@ -220,6 +226,8 @@
         const selfieCanvas = document.getElementById('selfie-canvas');
         const selfieImage = document.getElementById('selfie-image');
         const countdown = document.getElementById('countdown');
+        const recordedVideo = document.getElementById('recorded-video');
+
 
         const GOOGLE_API_KEY = 'AIzaSyBkSmH7XzLcxi0HwGiYRoa6YW7poOfa5Fc';
         const CX = '95422de319fca48a0';
@@ -230,6 +238,8 @@
 
         let stopSpeaking = false;
         let player;
+        let mediaRecorder;
+        let recordedChunks = [];
 
         recognition.onresult = (event) => {
             const currentIndex = event.resultIndex;
@@ -268,8 +278,8 @@
         window.addEventListener('load', () => {
             speak("Initializing Leo 2.0...");
             wishMe();
-            speak("I am Leo 2.0, an upgraded version of Leo, your virtual assistant. I can even take photos of you and your friends if your hands are busy How may I assist you?")
-            speak("I'm all Ears, You can ask me anything...!")
+            speak("I am Leo 2.0, an upgraded version of Leo, your virtual assistant. I can even take photos of you and your friends if your hands are busy")
+            speak(" How may I assist you? I'm all Ears, You can ask me anything...!")
         });
 
         async function searchGoogle(query) {
@@ -307,14 +317,14 @@
         speak("Opening Facebook...");
         window.open("https://facebook.com", "_blank");
     } else if (message.includes('who are you')) {
-        speak("I am Alien, your virtual assistant. How can I assist you?");
+        speak("I am LEO 2.0 , your virtual assistant. How can I assist you?");
     } else if (message.includes('what is your name')) {
-        speak("My name is Alien. What's your name?");
+        speak("My name is LEO 2.0 . What's your name?");
     } else if (message.match(/my name is (\w+)/)) {
         const name = message.match(/my name is (\w+)/)[1];
         speak(`${name} is a good name. How can I assist you, ${name}?`);
     } else if (message.includes('what is') || message.includes('who is') || message.includes('what are')) {
-        speak("This is what I found on the internet regarding " + message);
+        speak("This is what I Know  regarding " + message);
         const googleResults = await searchGoogle(message);
         const youtubeResults = await searchYouTube(message);
         displayResults(googleResults, youtubeResults);
@@ -328,7 +338,7 @@
     } else if (message.includes('calculator')) {
         speak("Opening Calculator");
         window.open('Calculator:///');
-    } else if (message.includes('stop')) {
+    } else if (message.includes('enough')) {
         stopMediaAndSpeech();
         speak("Is there something else I should help you with?");
     } else if (message.includes('play')) {
@@ -337,15 +347,18 @@
         playSongOnYouTube(song);
     } else if (message.includes('take a selfie')) {
         takeSelfie();
-    } else {
-        speak("I found some information for " + message + " on Google");
+    } else if (message.includes('start video recording')) {
+                startVideoRecording();
+            } else if (message.includes('stop video recording')) {
+                stopVideoRecording();
+            }  
+    else {
+        speak("I found some information for " + message );
         const results = await searchGoogle(message);
         displayResults(results);
     }
 }
-
-
-        function stopMediaAndSpeech() {
+function stopMediaAndSpeech() {
             stopSpeaking = true;
             window.speechSynthesis.cancel();
             if (player && typeof player.stopVideo === 'function') {
@@ -530,6 +543,56 @@
             const a = document.createElement('a');
             a.href = dataUrl;
             a.download = 'selfie.png';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+        function startVideoRecording() {
+            speak("Starting video recording...");
+            selfieSection.style.display = "flex";
+
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(stream => {
+                        selfieVideo.srcObject = stream;
+                        recordedChunks = [];
+                        mediaRecorder = new MediaRecorder(stream);
+                        mediaRecorder.ondataavailable = event => {
+                            if (event.data.size > 0) {
+                                recordedChunks.push(event.data);
+                            }
+                        };
+                        mediaRecorder.start();
+                        speak("Video recording started.");
+                    })
+                    .catch(error => {
+                        speak("Sorry, I couldn't access the camera.");
+                        console.error(error);
+                    });
+            } else {
+                speak("Sorry, your browser doesn't support camera access.");
+            }
+        }
+
+        function stopVideoRecording() {
+            if (mediaRecorder && mediaRecorder.state === "recording") {
+                mediaRecorder.stop();
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                    recordedVideo.src = URL.createObjectURL(blob);
+                    recordedVideo.style.display = 'block';
+                    downloadVideo(blob);
+                    speak("Video recording stopped and downloaded.");
+                };
+            } else {
+                speak("No video recording is currently active.");
+            }
+        }
+
+        function downloadVideo(blob) {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'recorded_video.webm';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
