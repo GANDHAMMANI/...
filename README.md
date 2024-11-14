@@ -29,7 +29,7 @@ Leo 2.0 converts user voice input into text, processes the command, and provides
 
 Leo 2.0 is now accessible online, thanks to deployment on Netlify, making it available to use anytime from any device with internet access.
 
-**Try Leo 2.0 here:** [In the web](https://lnkd.in/g6qEdWQs](https://chatbot-saketh07.netlify.app/)
+**Try Leo 2.0 here:** [In the web](https://chatbot-saketh07.netlify.app/)
 
 ## Technology Stack
 
