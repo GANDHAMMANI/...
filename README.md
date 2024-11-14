@@ -10,7 +10,7 @@ Developed by **Team #InnoUdayVoyagers**, Leo 2.0 integrates seamlessly into your
 
  ## Demo
  you can see the full demo Video here
-[In the LinkedIn post of ours]([https://www.linkedin.com/feed/update/urn:li:activity:7217188718502166530/))
+[In the LinkedIn post of ours](https://www.linkedin.com/feed/update/urn:li:activity:7217188718502166530/)
 ## 🚀 Features
 
 - **🌦️ Climate Updates**: Receive real-time weather updates based on your location.
@@ -29,7 +29,7 @@ Leo 2.0 converts user voice input into text, processes the command, and provides
 
 Leo 2.0 is now accessible online, thanks to deployment on Netlify, making it available to use anytime from any device with internet access.
 
-**Try Leo 2.0 here:** [In the web]([https://lnkd.in/g6qEdWQs](https://chatbot-saketh07.netlify.app/))
+**Try Leo 2.0 here:** [In the web](https://lnkd.in/g6qEdWQs](https://chatbot-saketh07.netlify.app/)
 
 ## Technology Stack
 
